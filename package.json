@@ -1,22 +1,28 @@
 {
-  "devDependencies": {
-    "assemblyscript": "^0.20.7",
-    "rimraf": "^3.0.2",
-    "serve": "^13.0.2"
-  },
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./build/release.js",
-      "types": "./build/release.d.ts"
-    }
-  },
-  "scripts": {
-    "build:debug": "asc src/index.ts --target debug",
-    "build:release": "asc src/index.ts --target release",
-    "build": "npm run build:debug && npm run build:release",
-    "clean": "rimraf dist/",
-    "test": "node tests",
-    "start": "serve ."
-  }
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./build/release.js",
+			"types": "./build/release.d.ts"
+		}
+	},
+	"scripts": {
+		"build:debug": "asc src/index.ts --target debug --exportTable --exportRuntime",
+		"build:release": "asc src/index.ts --target release --exportTable --exportRuntime",
+		"build": "npm run build:debug && npm run build:release",
+		"clean": "rimraf dist/",
+		"test": "npm run build:debug && node tests",
+		"start": "serve ."
+	},
+	"dependencies": {
+		"ecmassembly": "^0.2.1"
+	},
+	"devDependencies": {
+		"@assemblyscript/loader": "^0.20.7",
+		"assemblyscript": "^0.20.7",
+		"prettier": "^2.6.2",
+		"raf": "^3.4.1",
+		"rimraf": "^3.0.2",
+		"serve": "^13.0.2"
+	}
 }
