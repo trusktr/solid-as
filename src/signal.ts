@@ -8,20 +8,9 @@ const dependentsOfSignals = new Map<usize, Set<Reaction>>() // TODO WeakMap
 let currentReaction: Reaction | null = null
 let scheduledReactions = new Set<Reaction>()
 
-let privateInstantiation: boolean = false
-
-export class AnySignal {}
-
 // There is no destructuring (yet), so we use a class with getter and setter for now.
-export class Signal<T> extends AnySignal {
-	private value: T
-
-	constructor(initialValue: T) {
-		super()
-		if (!privateInstantiation) abort('Illegal Constructor')
-		privateInstantiation = false
-		this.value = initialValue
-	}
+export class Signal<T> {
+	constructor(private value: T) {}
 
 	get(/*TODO previous: T*/): T {
 		if (currentReaction) trackDependency(changetype<usize>(this), currentReaction!)
@@ -29,15 +18,13 @@ export class Signal<T> extends AnySignal {
 	}
 
 	set(newValue: T): T {
-		this.value = newValue
 		if (dependentsOfSignals.has(changetype<usize>(this)))
 			scheduleReactions(dependentsOfSignals.get(changetype<usize>(this)))
-		return this.value
+		return (this.value = newValue)
 	}
 }
 
 export function createSignal<T>(initialValue: T): Signal<T> {
-	privateInstantiation = true
 	return new Signal(initialValue)
 }
 
@@ -57,11 +44,7 @@ let areScheduled = false
 
 function scheduleReactions(reactions: Set<Reaction>): void {
 	const _reactions = reactions.values()
-
-	for (let i = 0, l = _reactions.length; i < l; i += 1) {
-		const reaction = _reactions[i]
-		scheduleReaction(reaction)
-	}
+	for (let i = 0, l = _reactions.length; i < l; i += 1) scheduleReaction(_reactions[i])
 }
 
 // Super simple microtask scheduling, does not have dynamic re-ordering while executing yet
@@ -82,11 +65,7 @@ function scheduleReaction(reaction: Reaction): void {
 function runReactions(): void {
 	const reactions = scheduledReactions.values()
 	scheduledReactions.clear()
-
-	for (let i = 0, l = reactions.length; i < l; i += 1) {
-		const reaction = reactions[i]
-		runReaction(reaction)
-	}
+	for (let i = 0, l = reactions.length; i < l; i += 1) runReaction(reactions[i])
 }
 
 function runReaction(reaction: Reaction): void {
