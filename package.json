@@ -1,6 +1,8 @@
 {
   "devDependencies": {
-    "assemblyscript": "^0.20.7"
+    "assemblyscript": "^0.20.7",
+    "rimraf": "^3.0.2",
+    "serve": "^13.0.2"
   },
   "type": "module",
   "exports": {
@@ -10,10 +12,11 @@
     }
   },
   "scripts": {
-    "asbuild:debug": "asc assembly/index.ts --target debug",
-    "asbuild:release": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
+    "build:debug": "asc src/index.ts --target debug",
+    "build:release": "asc src/index.ts --target release",
+    "build": "npm run build:debug && npm run build:release",
+    "clean": "rimraf dist/",
     "test": "node tests",
-    "start": "npx serve ."
+    "start": "serve ."
   }
 }
