@@ -1,22 +1,25 @@
 {
-  "targets": {
-    "debug": {
-      "outFile": "dist/debug.wasm",
-      "textFile": "dist/debug.wat",
-      "sourceMap": true,
-      "debug": true
-    },
-    "release": {
-      "outFile": "dist/release.wasm",
-      "textFile": "dist/release.wat",
-      "sourceMap": true,
-      "optimizeLevel": 3,
-      "shrinkLevel": 0,
-      "converge": false,
-      "noAssert": false
-    }
-  },
-  "options": {
-    "bindings": "esm"
-  }
+	"entries": [
+		"./node_modules/ecmassembly/assembly/PromiseActions.ts",
+		"./node_modules/ecmassembly/assembly/globals.ts",
+		"src/portable-helpers-wasm.ts",
+		"src/index-wasm.ts"
+	],
+	"targets": {
+		"debug": {
+			"outFile": "dist/wasm/debug.wasm",
+			"textFile": "dist/wasm/debug.wat",
+			"sourceMap": true,
+			"debug": true
+		},
+		"release": {
+			"outFile": "dist/wasm/release.wasm",
+			"textFile": "dist/wasm/release.wat",
+			"sourceMap": true,
+			"optimizeLevel": 3,
+			"shrinkLevel": 0,
+			"converge": false,
+			"noAssert": false
+		}
+	}
 }

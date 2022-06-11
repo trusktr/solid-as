@@ -41,11 +41,12 @@ function dirname(url) {
 }
 
 const wasmModule = ASLoader.instantiateSync(
-	fs.readFileSync(path.resolve(dirname(import.meta.url), '../dist/debug.wasm')),
+	fs.readFileSync(path.resolve(dirname(import.meta.url), '../dist/wasm/debug.wasm')),
 	imports,
 )
 
 // Before doing anything, give the exports to ECMAssembly
 es.wasmExports = wasmModule.exports
 
+console.log(' ----- TEST WASM BUILD ----- ')
 wasmModule.exports.test()

@@ -1,13 +1,10 @@
 {
 	"extends": "assemblyscript/std/portable.json",
 	"compilerOptions": {
-		"outDir": "../dist/js",
 		"lib": ["dom", "esnext"],
 		"module": "esnext",
 		"moduleResolution": "node",
-		"target": "es2020",
-		"declaration": true
+		"target": "es2020"
 	},
-	"include": ["./**/*.ts", "*.d.ts", "*.js"],
-	"exclude": ["./portable-helpers-wasm.ts"]
+	"include": ["./**/*.ts", "../../assembly/log.d.ts", "log.js"]
 }

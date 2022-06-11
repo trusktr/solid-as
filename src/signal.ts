@@ -1,4 +1,4 @@
-import {Promise} from '../node_modules/ecmassembly/assembly/index'
+import {queueMicrotask} from './queueMicrotask'
 
 type Reaction = () => void
 
@@ -19,7 +19,7 @@ export class Signal<T> {
 
 	set(newValue: T): T {
 		if (dependentsOfSignals.has(changetype<usize>(this)))
-			scheduleReactions(dependentsOfSignals.get(changetype<usize>(this)))
+			scheduleReactions(dependentsOfSignals.get(changetype<usize>(this))!)
 		return (this.value = newValue)
 	}
 }
@@ -34,16 +34,16 @@ export function createEffect<T extends Reaction>(effect: T): void {
 
 function trackDependency(signal: usize, reaction: Reaction): void {
 	if (!dependenciesOfReactions.has(reaction)) dependenciesOfReactions.set(reaction, new Set())
-	dependenciesOfReactions.get(reaction).add(signal)
+	dependenciesOfReactions.get(reaction)!.add(signal)
 
 	if (!dependentsOfSignals.has(signal)) dependentsOfSignals.set(signal, new Set())
-	dependentsOfSignals.get(signal).add(reaction)
+	dependentsOfSignals.get(signal)!.add(reaction)
 }
 
 let areScheduled = false
 
 function scheduleReactions(reactions: Set<Reaction>): void {
-	const _reactions = reactions.values()
+	const _reactions = Set_values(reactions)
 	for (let i = 0, l = _reactions.length; i < l; i += 1) scheduleReaction(_reactions[i])
 }
 
@@ -54,16 +54,14 @@ function scheduleReaction(reaction: Reaction): void {
 	if (areScheduled) return
 	areScheduled = true
 
-	// TODO replace with queueMicrotask
-	// Promise.resolve(0)
-	new Promise<i32, Error>(actions => actions.resolve(0)).then(() => {
+	queueMicrotask(() => {
 		areScheduled = false
 		runReactions()
 	})
 }
 
 function runReactions(): void {
-	const reactions = scheduledReactions.values()
+	const reactions = Set_values(scheduledReactions)
 	scheduledReactions.clear()
 	for (let i = 0, l = reactions.length; i < l; i += 1) runReaction(reactions[i])
 }
@@ -73,13 +71,13 @@ function runReaction(reaction: Reaction): void {
 	// that signals in unused branches don't trigger re-runs.
 	if (dependenciesOfReactions.has(reaction)) {
 		const dependencies = dependenciesOfReactions.get(reaction)
-		const _deps = dependencies.values()
-		dependencies.clear()
+		const _deps = Set_values(dependencies!)
+		dependencies!.clear()
 
 		for (let i = 0, l = _deps.length; i < l; i += 1) {
 			const signal = _deps[i]
 			const dependents = dependentsOfSignals.get(signal)
-			dependents.delete(reaction)
+			dependents!.delete(reaction)
 		}
 	}
 

@@ -4,6 +4,14 @@ Solid as \_\_\_\_\_!
 
 Solid, AssemblyScriptified and compiled to WebAssembly (very work in progress).
 
+# Installation
+
+TODO
+
+# Test
+
+`npm i && npm test`
+
 # TODO:
 
 - [ ] No tuples or

@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<script type="module"></script>
 		<script type="module">
-			// Original example uses auto-generated bindings with no way to control Wasm imports
-			// import { add } from "./dist/release.js";
-			// document.body.innerText = add(1, 2);
-
 			import {ECMAssembly} from './node_modules/ecmassembly/index.js'
 			import ASLoader from './node_modules/@assemblyscript/loader/index.js'
 
@@ -21,7 +18,7 @@
 				},
 			}
 
-			ASLoader.instantiateStreaming(fetch('./dist/release.wasm'), imports).then(_wasmModule => {
+			ASLoader.instantiateStreaming(fetch('./dist/wasm/release.wasm'), imports).then(_wasmModule => {
 				wasmModule = _wasmModule
 
 				// After the Wasm module is created, you need to pass the exports back to the lib:
